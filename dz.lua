@@ -1,51 +1,47 @@
 function Func(arr)
     local half = Sum(arr)
     local sum1 = 0
-    local index = 0
-    local j = 0
+    local index = 1
+    local j = 1
     for x in pairs(arr) do
-        if type(x) ~= "table" then
-            goto continue
-        end
         j = j + 1
-        sum1 = sum1 + arr[x]['p']
+        sum1 = sum1 + arr[x][2]
         if sum1 * 2 >= half then
             local add = 0
-            if math.abs(2 * sum1 - half) < math.abs(2 * (sum1 - arr[x]['p']) - half) then
+            if math.abs(2 * sum1 - half) < math.abs(2 * (sum1 - arr[x][2]) - half) and Len(arr) ~= 2 then
                 add = 1
             end
             index = j + add
             break
         end
-        ::continue::
     end
 
     local arr0, arr1 = {}, {}
-    local i = 0
+    local i = 1
     for x in pairs(arr) do
         if i >= index then
             break
         end
-        arr[x]['code'] = arr[x]['code'] .. '0'
-        arr0 = arr[x]
+        arr[x][3] = arr[x][3] .. '0'
+        table.insert(arr0, arr[x])
         i = i + 1
     end
     for x in pairs(arr) do
-        if i < index | type(x) ~= "table" then
+        if x < index then
             goto continue
         end
-        arr[x]['code'] = arr[x]['code'] .. '1'
-        arr1[x] = arr[x]
+        arr[x][3] = arr[x][3] .. '1'
+        table.insert(arr1, arr[x])
         ::continue::
         i = i + 1
     end
     if Len(arr1) == 1 then 
-        table.insert(Code, arr1)
+        table.insert(Code, arr1[1])
     else
         Func(arr1)
     end
     if Len(arr0) == 1 then
-        table.insert(Code, arr0)
+        table.insert(Code, arr0[1])
     else
         Func(arr0)
     end
@@ -55,11 +51,7 @@ end
 function Sum(arr)
     local out = 0
     for x,v in pairs(arr) do
-        if type(x) ~= "table" then
-            goto continue
-        end
-        print(x)
-        out = out + arr[x]['p']
+        out = out + arr[x][2]
         ::continue::
     end
     return out
@@ -67,20 +59,40 @@ end
 
 function Len(arr)
     local size = 0
-    for _ in pairs(arr) do size = size + 1 end
+    for _ in pairs(arr) do 
+        size = size + 1 
+    end
     return size
 end
 
+function Compare(a,b)
+    return a[2] > b[2]
+  end
+  
 
-os.execute("chcp 65001")
+
+os.execute("chcp 1251")
+
 local alp = {}
-alp['Р°'] = {}
-alp['Р°']['p'] = 0.1
-alp['Р°']['code'] = ''
+io.write('Введите количество символов: ')
+local n = io.read('n')
+print(type(n))
+for j=1,n do
+    io.write('Введите символ: ')
+    local _ = io.read()
+    local a = io.read("l")
+    io.write('Введите вероятность символа: ')
+    local p = io.read('n')
+    alp[j] = {}
+    alp[j][1] = a
+    alp[j][2] = p
+    alp[j][3] = ''
+end
 
+table.sort(alp, Compare)
 Code = {}
-
 Func(alp)
+table.sort(Code, Compare)
 for x in pairs(alp) do
-    print(x, alp[x]['p'], alp[x]['code'])
+    print(Code[x][1], Code[x][2], Code[x][3])
 end
