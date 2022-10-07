@@ -4,14 +4,17 @@ function Func(arr)
     local index = 1
     local j = 1
     for x in pairs(arr) do
-        j = j + 1
         sum1 = sum1 + arr[x][2]
         if sum1 * 2 >= half then
             local add = 0
             if math.abs(2 * sum1 - half) < math.abs(2 * (sum1 - arr[x][2]) - half) and Len(arr) ~= 2 then
                 add = 1
             end
-            index = j + add
+            if Len(arr) == 2 then
+                index = 2
+            else
+                index = x + add
+            end
             break
         end
     end
@@ -70,29 +73,49 @@ function Compare(a,b)
   end
   
 
-
-os.execute("chcp 1251")
+function PrintArr(arr)
+    
+    print('\n\nКодировка методом Шеннона-Фано')
+    print('|  Символ  |    Вероятность   | Код')
+    for x in pairs(arr) do
+        print(string.format('|    %s     |    %.3f         | %s ',arr[x][1], arr[x][2], arr[x][3]))
+    end
+    print('\n')
+end
 
 local alp = {}
+Code = {}
+
+os.execute("chcp 1251")
 io.write('Введите количество символов: ')
 local n = io.read('n')
-print(type(n))
 for j=1,n do
     io.write('Введите символ: ')
     local _ = io.read()
     local a = io.read("l")
     io.write('Введите вероятность символа: ')
     local p = io.read('n')
+    while  p <= 0 do
+        io.write("Вероятность не может быть отрицательной или равна 0, повторите ввод: ")
+        p = io.read('n')
+    end
+    while p > 1 do
+        io.write("Вероятность не может быть больше 1, повторите ввод: ")
+        p = io.read('n')
+    end
     alp[j] = {}
     alp[j][1] = a
     alp[j][2] = p
     alp[j][3] = ''
 end
 
-table.sort(alp, Compare)
-Code = {}
-Func(alp)
-table.sort(Code, Compare)
-for x in pairs(alp) do
-    print(Code[x][1], Code[x][2], Code[x][3])
+if Sum(alp) > 1 then
+    print('Суммарная вероятность не может быть больше 1, Ошибка выполнения')
 end
+
+table.sort(alp, Compare)
+
+Func(alp)
+
+table.sort(Code, Compare)
+PrintArr(Code)
