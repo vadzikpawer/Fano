@@ -22,20 +22,20 @@ function Func(arr)
     local arr0, arr1 = {}, {}
     local i = 1
     for x in pairs(arr) do
-        if i >= index then
-            break
+        if i < index then
+            goto continue
         end
         arr[x][3] = arr[x][3] .. '0'
         table.insert(arr0, arr[x])
+        ::continue::
         i = i + 1
     end
     for x in pairs(arr) do
-        if x < index then
-            goto continue
+        if x >= index then
+            break
         end
         arr[x][3] = arr[x][3] .. '1'
         table.insert(arr1, arr[x])
-        ::continue::
         i = i + 1
     end
     if Len(arr1) == 1 then 
@@ -96,7 +96,7 @@ for j=1,n do
     io.write('Введите вероятность символа: ')
     local p = io.read('n')
     while  p <= 0 do
-        io.write("Вероятность не может быть отрицательной или равна 0, повторите ввод: ")
+        io.write("Вероятность символа не может быть отрицательной или равна 0, Повторите ввод: ")
         p = io.read('n')
     end
     while p > 1 do
@@ -110,7 +110,8 @@ for j=1,n do
 end
 
 if Sum(alp) > 1 then
-    print('Суммарная вероятность не может быть больше 1, Ошибка выполнения')
+    print('Суммарная вероятность не может быть больше 1')
+    return
 end
 
 table.sort(alp, Compare)
