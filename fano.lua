@@ -86,7 +86,6 @@ end
 function StrToTb(str)
     local out = {}
     str = Clean(str)
-    print(str)
     local ln = 0
     for i = 1, #str do
         ln = ln + 1
